@@ -1,22 +1,19 @@
 <template>
   <div>
-    <!-- <div class="btn-nav">
-      <a href="#login">Login</a>
-    </div>-->
-    <ul class="nav justify-content-center">
-      <li class="nav-item">
-        <a class="nav-link" href="#/login">Login</a>
-      </li>
-    </ul>
-
-    <div class="container">
-      <div class="card-header">Welcome</div>
-      <div class="card-body">
-        <i style="font-size:40px" class="fas fa-shopping-cart"></i>
-        <h2 class="title">mCart</h2>
+    <el-card class="box-card welcome-card">
+      <div slot="header" class="clearfix">
+        <span>Shopping Cart</span>
+        <el-link
+          href="#/login"
+          style="float: right; padding: 3px 0"
+          type="primary"
+          >Login</el-link
+        >
       </div>
-      <h3>An online app to purchase mobile gadgets</h3>
-    </div>
+      <div>
+        <h3>An online app to purchase goods</h3>
+      </div>
+    </el-card>
   </div>
 </template>
 <script>
@@ -25,9 +22,11 @@ export default {
 };
 </script>
 <style>
-.container {
-  border: 5px solid cadetblue;
+.welcome-card {
+  border: 5px solid cadetblue !important;
   max-width: 650px;
+  margin: auto;
+  padding: 30px;
 }
 .title {
   text-shadow: 3px 3px 2px rgba(150, 150, 150, 1);

@@ -1,47 +1,22 @@
 <template>
-  <div>
-    <div class="container">
-      <div class="card-header">Login</div>
-      <div class="card-body">
-        <form @submit.prevent="handleSubmit()">
-          <div class="form-group row">
-            <label for="username" class="col-form-label col-sm-2"
-              >Username :</label
-            >
-            <input
-              class="form-control"
-              v-model="username"
-              name="username"
-              type="text"
-            />
-          </div>
-          <div class="form-group row">
-            <label for="password" class="col-form-label col-sm-2"
-              >Password :</label
-            >
-            <input
-              class="form-control"
-              v-model="password"
-              name="password"
-              type="password"
-            />
-          </div>
-          <div class="form-group row">
-            <div class="col-3 offset-2">
-              <button type="submit" class="btn btn-primary">Login</button>
-            </div>
-            <div class="col-3 offset-2">
-              <input
-                type="reset"
-                class="btn btn-outline-secondary"
-                value="Cancel"
-              />
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
+  <el-form
+    :model="ruleForm"
+    :rules="rules"
+    ref="ruleForm"
+    @submit.native.prevent="submitForm('ruleForm')"
+    class="welcome-card"
+  >
+    <el-form-item label="User name" prop="name">
+      <el-input v-model="ruleForm.name"></el-input>
+    </el-form-item>
+    <el-form-item label="Password" prop="password">
+      <el-input v-model="ruleForm.password" type="password"></el-input>
+    </el-form-item>
+    <el-form-item>
+      <el-button type="primary" native-type="submit">Create</el-button>
+      <el-button @click="resetForm('ruleForm')">Cancel</el-button>
+    </el-form-item>
+  </el-form>
 </template>
 
 <script>
@@ -51,12 +26,51 @@ export default {
   name: "login",
   data() {
     return {
-      username: "",
-      password: "",
+      ruleForm: {
+        name: "",
+        password: "",
+      },
       users: [],
+      rules: {
+        name: [
+          { required: true, message: "please input username", trigger: "blur" },
+          {
+            min: 3,
+            max: 12,
+            message: "minimum length should be 3",
+            trigger: "blur",
+          },
+        ],
+        password: [
+          { required: true, message: "please input password", trigger: "blur" },
+          { min: 5, message: "minimum length should be 5", trigger: "blur" },
+        ],
+      },
     };
   },
   methods: {
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          const { name, password } = this.ruleForm;
+          var user = this.users.filter(
+            (item) => item.userName === name && item.password === password
+          );
+          if (user != "") {
+            sessionStorage.setItem("isLoggedIn", true);
+            Router.push({ path: "/products" });
+          } else {
+            alert("Incorrect username or password");
+          }
+        } else {
+          alert("error submit!!");
+          return false;
+        }
+      });
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    },
     handleSubmit() {
       if (this.username === "" || this.password === "")
         alert("invalid details");
@@ -68,8 +82,8 @@ export default {
         if (user != "") {
           sessionStorage.setItem("isLoggedIn", true);
           Router.push({ path: "/products" });
-        } else{
-            alert("Incorrect username or password")
+        } else {
+          alert("Incorrect username or password");
         }
       }
     },
